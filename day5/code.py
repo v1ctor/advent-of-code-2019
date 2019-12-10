@@ -1,8 +1,12 @@
-
+import sys
 from computer import Computer
 
 def main():
-    f = open("input.txt")
+    filename = "input.txt"
+    steps = False
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    f = open(filename)
     s = f.readline()
     memory = list(map(int, s.split(",")))
 
