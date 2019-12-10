@@ -1,16 +1,12 @@
 
+def is_between(a, b, c):
+    if a > b:
+        return a > c and c > b
+    else:
+        return a < c and c < b
+
 def is_intersect(a, b, c, d):
-    if a[0] == b[0] and c[1] == d[1]:
-        if (a[1] > c[1] and c[1] > b[1]):
-            return True
-        elif (b[1] > c[1] and c[1] > a[1]):
-            return True
-    elif a[1] == b[1] and c[0] == d[0]:
-        if (a[0] > c[0] and c[0] > b[0]):
-            return True
-        elif (b[0] > c[0] and c[0] > a[0]):
-            return True
-    return False
+    return (is_between(a[0], b[0], c[0]) and is_between(c[1], d[1], a[1])) or (is_between(a[1], b[1], c[1]) and is_between(c[0], d[0], a[0]))
 
 def parse_coords(cmds):
     coords = []
@@ -44,10 +40,13 @@ def find_intersections(wire1, wire2):
     for i in range(1, size1):
         for j in range(1, size2):
             if is_intersect(wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]):
+                point = []
                 if wire1[i - 1][0] == wire1[i][0]:
-                    intersections.append([wire1[i][0], wire2[j][1]])
+                    point = [wire1[i][0], wire2[j][1]]
                 else:
-                    intersections.append([wire1[i][1], wire2[j][0]])
+                    point = [wire2[j][0], wire1[i][1]]
+                print ("{} {} {} {} {} {} {}".format(i, j, point, wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]))
+                intersections.append(point)
     return intersections
 
 
@@ -57,17 +56,19 @@ def main():
     wire1 = read_wire(f)
     wire2 = read_wire(f)
 
-#    print(wire1)
-#    print(wire2)
+   # print(wire1)
+   # print(wire2)
 
     points = find_intersections(wire1, wire2)
+
+    # print(points)
     result = points[0] 
     length = abs(result[0]) + abs(result[1])
     for i in range(1, len(points)):
         current = abs(points[i][0]) + abs(points[i][1])
         if current < length:
             length = current 
-            result = points[i]
+            result = list(points[i])
 
     print(result)
     print(length)
