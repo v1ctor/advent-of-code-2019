@@ -1,5 +1,13 @@
 import sys
 
+class Node:
+    def __init__(self, x, y, step):
+        self.x = x
+        self.y = y
+        self.step = 0
+
+
+
 def is_between(a, b, c):
     if a > b:
         return a > c and c > b
@@ -7,24 +15,23 @@ def is_between(a, b, c):
         return a < c and c < b
 
 def is_intersect(a, b, c, d):
-    return (is_between(a[0], b[0], c[0]) and is_between(c[1], d[1], a[1])) or (is_between(a[1], b[1], c[1]) and is_between(c[0], d[0], a[0]))
+    return (is_between(a.x, b.x, c.x) and is_between(c.y, d.y, a.y)) or (is_between(a.y, b.y, c.y) and is_between(c.x, d.x, a.x))
 
 def parse_coords(cmds):
     coords = []
-    point = [0, 0]
+    point = Node(0, 0, 0)
     coords.append(point)
     for cmd in cmds:
-        point = list(point)
         length = int(cmd[1:])
         direction = cmd[0]
         if direction == 'U':
-            point[1] += length
+            point = Node(point.x, point.y + length, point.step + length)
         if direction == 'D':
-            point[1] -= length
+            point = Node(point.x, point.y - length, point.step + length)
         if direction == 'L':
-            point[0] -= length
+            point = Node(point.x - length, point.y, point.step + length)
         if direction == 'R':
-            point[0] += length
+            point = Node(point.x + length, point.y, point.step + length)
 
         coords.append(point)
     return coords
@@ -42,10 +49,10 @@ def find_intersections(wire1, wire2):
         for j in range(1, size2):
             if is_intersect(wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]):
                 point = []
-                if wire1[i - 1][0] == wire1[i][0]:
-                    point = [wire1[i][0], wire2[j][1]]
+                if wire1[i - 1].x == wire1[i].x:
+                    point = [wire1[i].x, wire2[j].y]
                 else:
-                    point = [wire2[j][0], wire1[i][1]]
+                    point = [wire2[j].x, wire1[i].y]
                 #print ("{} {} {} {} {} {} {}".format(i, j, point, wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]))
                 intersections.append(point)
     return intersections
