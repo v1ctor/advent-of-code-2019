@@ -5,15 +5,22 @@ def match(i):
    
     d = i % 10
     i = i / 10
+    group = 1
     while i > 0:
         n = i % 10
         i = i / 10
         if n == d:
+            group += 1
+        elif group == 2:
             dup = True
+            group = 1
+        else:
+            group = 1
+            
         if n > d:
             dec = False
         d = n
-    return dup and dec
+    return (dup or group == 2) and dec
 
 
 def number_of_passwords(start, end):
