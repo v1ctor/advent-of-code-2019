@@ -4,8 +4,7 @@ class Node:
     def __init__(self, x, y, step):
         self.x = x
         self.y = y
-        self.step = 0
-
+        self.step = step
 
 
 def is_between(a, b, c):
@@ -52,22 +51,25 @@ def find_intersections(wire1, wire2):
             if is_intersect(wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]):
                 point = []
                 if wire1[i - 1].x == wire1[i].x:
-                    step1 = wire1[i - 1].step - abs(wire1[i - 1].y - wire2[j].y);
-                    step2 = wire2[j - 1].step - abs(wire2[j - 1].x - wire1[i].x);
-                    point = Node(wire1[i].x, wire2[j].y, step1 if step1 < step2 else step2)
+                    step1 = wire1[i - 1].step + abs(wire1[i - 1].y - wire2[j].y);
+                    step2 = wire2[j - 1].step + abs(wire2[j - 1].x - wire1[i].x);
+                    point = Node(wire1[i].x, wire2[j].y, step1 + step2)
                 else:
-                    step1 = wire1[i - 1].step - abs(wire1[i - 1].x - wire2[j].x);
-                    step2 = wire2[j - 1].step - abs(wire2[j - 1].y - wire1[i].y);
-                    point = Node(wire2[j].x, wire1[i].y, step1 if step1 < step2 else step2)
-                #print ("{} {} {} {} {} {} {}".format(i, j, point, wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]))
+                    step1 = wire1[i - 1].step + abs(wire1[i - 1].x - wire2[j].x);
+                    step2 = wire2[j - 1].step + abs(wire2[j - 1].y - wire1[i].y);
+                    point = Node(wire2[j].x, wire1[i].y, step1 + step2)
                 intersections.append(point)
     return intersections
 
 
 def main():
     filename = "input.txt"
+    steps = False
     if len(sys.argv) > 1:
         filename = sys.argv[1]
+    if len(sys.argv) > 2 and sys.argv[2] == "--steps":
+        steps = True
+
     f = open(filename)
     
     wire1 = read_wire(f)
@@ -75,15 +77,27 @@ def main():
    
     points = find_intersections(wire1, wire2)
 
-    result = points[0] 
-    length = abs(result.x) + abs(result.y)
-    for i in range(1, len(points)):
-        current = abs(points[i].x) + abs(points[i].y)
-        if current < length:
-            length = current 
-            result = points[i]
+    if not steps:
+        result = points[0] 
+        length = abs(result.x) + abs(result.y)
+        for i in range(1, len(points)):
+            current = abs(points[i].x) + abs(points[i].y)
+            if current < length:
+                length = current 
+                result = points[i]
 
-    print(length)
+        print(length)
+    else:
+        result = points[0]
+        step = points[0].step
+
+        for i in range(1, len(points)):             
+            if points[i].step < step:                 
+                step = points[i].step                 
+                result = points[i]          
+        print(step)
+
+
     
 if __name__== "__main__":
     main()
