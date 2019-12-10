@@ -1,7 +1,7 @@
 
 class Computer:
     def __init__(self, memory, noun, verb):
-        self.memory = memory
+        self.memory = list(memory)
         self.noun = noun
         self.verb = verb
 
