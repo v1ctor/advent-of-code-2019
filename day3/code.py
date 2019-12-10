@@ -1,3 +1,4 @@
+import sys
 
 def is_between(a, b, c):
     if a > b:
@@ -23,7 +24,7 @@ def parse_coords(cmds):
         if direction == 'L':
             point[0] -= length
         if direction == 'R':
-            point[1] += length
+            point[0] += length
 
         coords.append(point)
     return coords
@@ -45,23 +46,22 @@ def find_intersections(wire1, wire2):
                     point = [wire1[i][0], wire2[j][1]]
                 else:
                     point = [wire2[j][0], wire1[i][1]]
-                print ("{} {} {} {} {} {} {}".format(i, j, point, wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]))
+                #print ("{} {} {} {} {} {} {}".format(i, j, point, wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]))
                 intersections.append(point)
     return intersections
 
 
 def main():
-    f = open("input.txt")
+    filename = "input.txt"
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    f = open(filename)
     
     wire1 = read_wire(f)
     wire2 = read_wire(f)
-
-   # print(wire1)
-   # print(wire2)
-
+   
     points = find_intersections(wire1, wire2)
 
-    # print(points)
     result = points[0] 
     length = abs(result[0]) + abs(result[1])
     for i in range(1, len(points)):
