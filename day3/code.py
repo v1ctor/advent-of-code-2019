@@ -36,10 +36,12 @@ def parse_coords(cmds):
         coords.append(point)
     return coords
 
+
 def read_wire(f):
     s = f.readline()
     cmds = list(s.split(","))
     return parse_coords(cmds)
+
 
 def find_intersections(wire1, wire2):
     size1 = len(wire1)
@@ -50,9 +52,13 @@ def find_intersections(wire1, wire2):
             if is_intersect(wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]):
                 point = []
                 if wire1[i - 1].x == wire1[i].x:
-                    point = [wire1[i].x, wire2[j].y]
+                    step1 = wire1[i - 1].step - abs(wire1[i - 1].y - wire2[j].y);
+                    step2 = wire2[j - 1].step - abs(wire2[j - 1].x - wire1[i].x);
+                    point = Node(wire1[i].x, wire2[j].y, step1 if step1 < step2 else step2)
                 else:
-                    point = [wire2[j].x, wire1[i].y]
+                    step1 = wire1[i - 1].step - abs(wire1[i - 1].x - wire2[j].x);
+                    step2 = wire2[j - 1].step - abs(wire2[j - 1].y - wire1[i].y);
+                    point = Node(wire2[j].x, wire1[i].y, step1 if step1 < step2 else step2)
                 #print ("{} {} {} {} {} {} {}".format(i, j, point, wire1[i - 1], wire1[i], wire2[j - 1], wire2[j]))
                 intersections.append(point)
     return intersections
@@ -70,17 +76,14 @@ def main():
     points = find_intersections(wire1, wire2)
 
     result = points[0] 
-    length = abs(result[0]) + abs(result[1])
+    length = abs(result.x) + abs(result.y)
     for i in range(1, len(points)):
-        current = abs(points[i][0]) + abs(points[i][1])
+        current = abs(points[i].x) + abs(points[i].y)
         if current < length:
             length = current 
-            result = list(points[i])
+            result = points[i]
 
-    print(result)
     print(length)
-
-
     
 if __name__== "__main__":
     main()
