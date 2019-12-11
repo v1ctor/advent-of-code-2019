@@ -2,8 +2,8 @@ import sys
 
 
 def get_direction(x, y):
-    large = y
-    small = x
+    large = abs(y)
+    small = abs(x)
     if abs(x) > abs(y):
         large = x
         small = y
@@ -12,14 +12,16 @@ def get_direction(x, y):
         x /= abs(x)
         y /= abs(y)
 
-    elif small != 0 and abs(large) % abs(small) == 0:
-        x /= abs(small)
-        y /= abs(small)
+    for factor in range(small, 0, -1):
+        if abs(large) % factor == 0 and abs(small) % factor == 0:
+            x /= factor
+            y /= factor
+            break
 
 
-    elif x == 0:
+    if x == 0 and y != 0:
         y /= abs(y)
-    elif y == 0:
+    if y == 0 and x != 0:
         x /= abs(x)
 
     return (x, y)
@@ -39,7 +41,7 @@ def compute_weight(x, y, rows):
             result[direction].append([i - x, j - y])
 
 
-    # print(result)
+    print("[{}] {}".format(len(result), result))
     return len(result)
 
 
