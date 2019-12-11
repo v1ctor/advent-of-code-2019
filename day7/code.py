@@ -4,9 +4,11 @@ import itertools
 
 def main():
     filename = "input.txt"
-    steps = False
+    feedback = False
     if len(sys.argv) > 1:
         filename = sys.argv[1]
+    if len(sys.argv) > 2 and sys.argv[2] == "--feedback":
+        feedback = True
     f = open(filename)
     s = f.readline()
     memory = list(map(int, s.split(",")))
