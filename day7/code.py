@@ -1,6 +1,6 @@
 import sys
-from computer import Computer
 from amplifier import Amplifier
+import itertools 
 
 def main():
     filename = "input.txt"
@@ -11,10 +11,20 @@ def main():
     s = f.readline()
     memory = list(map(int, s.split(",")))
 
-    a = Amplifier(memory, 3, 0)
-    signal = a.execute()
+    maxSignal = 0
+    result = None
+    signal = 0
+    for c in itertools.permutations(range(5), 5):
+        signal = 0
+        for i in c:
+            a = Amplifier(memory, i, signal)
+            signal = a.execute()
+        if maxSignal < signal:
+            maxSignal = signal
+            result = c
 
-    print("Result signal: {}".format(signal))
+    print("Result signal: {}".format(maxSignal))
+    print("Combination: {}".format(result))
 
 if __name__== "__main__":
     main()
