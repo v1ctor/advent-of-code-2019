@@ -15,9 +15,11 @@ def indirect_orbits(orbits):
 
 def main():
     filename = "input.txt"
-    steps = False
+    find_path = False
     if len(sys.argv) > 1:
         filename = sys.argv[1]
+    if len(sys.argv) > 2 and sys.argv[2] == "--find-path":
+        find_path = True
     f = open(filename)
     orbits = {}
     for s in f.readlines():
@@ -28,6 +30,7 @@ def main():
             orbits[key] = []
         orbits[key].append(value)
 
+  
     print(indirect_orbits(orbits))
 
 
