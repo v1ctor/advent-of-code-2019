@@ -1,5 +1,6 @@
 import sys
 from computer import Computer
+from amplifier import Amplifier
 
 def main():
     filename = "input.txt"
@@ -10,8 +11,10 @@ def main():
     s = f.readline()
     memory = list(map(int, s.split(",")))
 
-    c = Computer(memory)
-    c.run()
+    a = Amplifier(memory, 3, 0)
+    signal = a.execute()
+
+    print("Result signal: {}".format(signal))
 
 if __name__== "__main__":
     main()
