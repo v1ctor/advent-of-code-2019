@@ -18,9 +18,9 @@ def main():
     signal = 0
     for c in itertools.permutations(range(5), 5):
         signal = 0
-        for i in c:
-            a = Amplifier(memory, i, signal)
-            signal = a.execute()
+        for phase in c:
+            a = Amplifier(memory, phase)
+            signal = a.amplify(signal)
         if maxSignal < signal:
             maxSignal = signal
             result = c

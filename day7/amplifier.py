@@ -3,14 +3,13 @@ from computer import Computer
 
 class Amplifier:
     
-    def __init__(self, program, phase, signal, amplifier = None):
+    def __init__(self, program, phase, amplifier = None):
         self.phase = phase
         self.program = program
-        self.signal = signal
         self.amplifier = amplifier
 
-    def execute(self):
-        stdin = StringIO("{}\n{}\n".format(self.phase, self.signal))
+    def amplify(self, signal):
+        stdin = StringIO("{}\n{}\n".format(self.phase, signal))
         stdout = StringIO()
         c = Computer(self.program, stdin, stdout)
         c.run()
