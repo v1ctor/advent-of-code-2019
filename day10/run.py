@@ -61,7 +61,7 @@ def main():
                 if candidate > result:
                     result = candidate
 
-    print(rows)
+#    print(rows)
     print(result)
 
 
