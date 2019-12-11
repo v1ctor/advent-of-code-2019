@@ -1,5 +1,11 @@
 import sys
 
+class Asteroid:
+    def __init__(self, x, y, weight):
+	self.x = x
+	self.y = y
+	self.weight = weight
+
 
 def get_direction(x, y):
 
@@ -19,9 +25,9 @@ def get_direction(x, y):
 
     return (x, y)
 
-def compute_weight(x, y, rows):
+
+def compute_asteroid_map(x, y, rows):
     result = {}
-   # print([x, y])
     for i in range(len(rows)):
         for j in range(len(rows[i])):
             if i == x and j == y:
@@ -33,31 +39,40 @@ def compute_weight(x, y, rows):
                 result[direction] = []
             result[direction].append([i - x, j - y])
 
-
 #    print("[{}] {}".format(len(result), result))
-    return len(result)
+    return result
 
+def get_nth_asteroid(x, y, rows, n):
+	pass
 
+def compute_weight(x, y, rows):
+    return len(compute_asteroid_map(x, y, rows))
     
-
-def main():
-    filename = "input.txt"
-    steps = False
-    if len(sys.argv) > 1:
-        filename = sys.argv[1]
-    f = open(filename)
-    rows = f.readlines()
-    
-    result = 0
+def get_target_point(rows):
+    result = Asteroid(-1, -1, 0)
     for i in range(len(rows)):
         for j in range(len(rows[i])):
             if rows[i][j] == '#':
                 candidate = compute_weight(i, j, rows)
-                if candidate > result:
-                    result = candidate
+                if candidate > result.weight:
+                    result = Asteroid(i, j, candidate) 
+    return result
 
-#    print(rows)
-    print(result)
+def main():
+    filename = "input.txt"
+    destory = False
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    if len(sys.argv) > 2 and sys.argv[2] == "--destroy":
+	destroy = True
+    f = open(filename)
+    rows = f.readlines()
+    
+    result = get_target_point(rows)
+    if not destory:
+	print(result.weight)
+    else:
+	print(get_nth_asteroid(result.x, result.y, rows, 200))
 
 
 if __name__== "__main__":
