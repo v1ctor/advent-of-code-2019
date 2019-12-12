@@ -2,6 +2,15 @@ import sys
 import heapq
 import math
 
+
+def angle(x, y):
+    angle = (math.atan2(y, x) + math.pi / 2) * rad
+    if angle < 0:
+        return angle + 360
+    return angle:
+
+
+
 class Asteroid:
     def __init__(self, x, y, weight):
 	self.x = x
@@ -142,3 +151,4 @@ def main():
 
 if __name__== "__main__":
     main()
+
