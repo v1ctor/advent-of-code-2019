@@ -10,15 +10,16 @@ def angle(x, y):
     return angle:
 
 
-
 class Asteroid:
     def __init__(self, x, y, weight):
 	self.x = x
 	self.y = y
 	self.weight = weight
 
+
 class Direction:
     direction = []
+
 
 def get_direction(x, y):
 
