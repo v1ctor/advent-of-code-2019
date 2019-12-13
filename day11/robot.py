@@ -50,7 +50,8 @@ class Robot:
         self.computer.readbuf.append(0)
         self.direction = Direction(Direction.N)
 
-    def run(self):
+
+    def compute_colors(self):
         coords = (0, 0)
         result = {}
         while not self.computer.terminated():
@@ -80,7 +81,49 @@ class Robot:
                 self.computer.readbuf.append(instruction)
 
 
-        return len(result)
+        return result
+
+    def draw_picture(self):
+        self.computer.readbuf = []
+        self.computer.readbuf.append(1)
+
+        colors = self.compute_colors()
+        minX = 0
+        minY = 0
+        maxX = 0
+        maxY = 0
+
+        for key in colors.keys():
+            if key[0] < minX:
+                minX = key[0]
+            if key[0] > maxX:
+                maxX = key[0]
+            if key[1] < minY:
+                minY = key[1]
+            if key[1] > maxY:
+                maxY = key[1]
+
+
+        sizeX = maxX - minX + 1
+        sizeY = maxY - minY + 1
+
+        result = [[]] * sizeY
+        for j in range(sizeY):
+            result[j] = ['.'] * sizeX
+            for i in range(sizeX):
+                coords = (i - minX, j - minY)
+                if coords in colors:
+                    if colors[coords] == 1:
+                        result[j][i] = "#"
+
+        for row in result:
+            print(''.join(row))
+
+
+    def run(self):
+        return len(self.compute_colors())
+
+
 
 
 
