@@ -58,9 +58,9 @@ class Robot:
             if len(self.computer.writebuf) == 2:
                 color = self.computer.writebuf[0]
                 turn = self.computer.writebuf[1]
-                self.computer.writebuf = []
-                self.computer.readbuf.append(color)
-                
+                self.computer.writebuf = self.computer.writebuf[2:]
+               
+
                 # color  
                 if coords not in result:
                     result[coords] = 1
@@ -74,6 +74,8 @@ class Robot:
                     self.direction = Direction.turn_right(self.direction)
                 diff = Direction.diff(self.direction)
                 coords = (coords[0] + diff[0], coords[1] + diff[1])
+
+                self.computer.readbuf.append(color)
 
         return len(result)
 
