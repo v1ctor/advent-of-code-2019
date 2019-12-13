@@ -3,20 +3,21 @@ from computer import Computer
 
 class Amplifier:
     
-    def __init__(self, program, phase, amplifier = None):
-        self.phase = phase
-        self.program = program
-        self.amplifier = amplifier
-        
+    def __init__(self, program, phase):
+        self.computer = Computer(program)
+        self.computer.readbuf.append(phase)
+
+    def terminated():
+        return not self.computer.interrupted()
 
     def amplify(self, signal):
-        stdin = StringIO("{}\n{}\n".format(self.phase, signal))
-        stdout = StringIO()
-        c = Computer(self.program, stdin, stdout)
-        c.run()
-        signal = int(stdout.getvalue())
-        stdin.close()
-        stdout.close()
+        self.computer.readbuf.append(signal)
+        self.computer.run()
+        signal = None
+        if len(self.computer.writebuf) > 0:
+            signal = self.computer.writebuf[0]
+            self.computer.output = self.computer.writebuf[1:]
+
         return signal
 
 

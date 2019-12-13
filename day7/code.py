@@ -21,9 +21,10 @@ def main():
         for phase in perm:
             a = Amplifier(memory, phase)
             signal = a.amplify(signal)
+
         if maxSignal < signal:
             maxSignal = signal
-            result = c
+            result = perm
 
     print("Result signal: {}".format(maxSignal))
     print("Combination: {}".format(result))
