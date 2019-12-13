@@ -4,8 +4,9 @@ import sys
 class Computer:
 
     def __init__(self, memory, stdin = sys.stdin, stdout = sys.stdout):
-        self.memory = list(memory)
+        self.memory = list(memory) + [0] * 10000 
         self.pc = 0
+        self.rb = 0
         self.stdin = stdin
         self.stdout = stdout
 
@@ -15,29 +16,38 @@ class Computer:
 	return mode % 10
 
 
+    def write(self, pos, value, mode):
+        addr = self.memory[self.pc + pos]
+        value_mode = self.mode(mode, pos)
+	if value_mode == 0:
+	    self.memory[addr] = value
+        elif value_mode == 2:
+            self.memory[self.rb + addr] = value
+
     def read(self, pos, mode = -1):
         value = self.memory[self.pc + pos]
         if mode == -1:
 	    return value
-	if self.mode(mode, pos) == 0:
+        value_mode = self.mode(mode, pos)
+	if value_mode == 0:
 	    return self.memory[value]
-	else:
+        elif value_mode == 2:
+            return self.memory[self.rb + value]
+        else:
 	    return value
 
     # op 1
     def add(self, mode):
 	val1 = self.read(1, mode)
 	val2 = self.read(2, mode)
-        addr = self.read(3)
-        self.memory[addr] = val1 + val2
+        addr = self.write(3, val1 + val2, mode)
         self.pc += 4
 
     # op 2
     def mult(self, mode):
         val1 = self.read(1, mode)
         val2 = self.read(2, mode)
-        addr = self.read(3)
-        self.memory[addr] = val1 * val2
+        addr = self.write(3, val1 * val2, mode)
         self.pc += 4
 
     # op 5 
@@ -62,29 +72,32 @@ class Computer:
     def less_than(self, mode):
 	first = self.read(1, mode)
         second = self.read(2, mode)
-	addr = self.read(3)
 	if first < second:
-	    self.memory[addr] = 1
+	    self.write(3, 1, mode)
 	else:
-	    self.memory[addr] = 0
+	    self.write(3, 0, mode)
 	self.pc += 4
 
     # op 8
     def equals(self, mode):
 	first = self.read(1, mode)
         second = self.read(2, mode)
-	addr = self.read(3)
 	if first == second:
-	    self.memory[addr] = 1
+	    self.write(3, 1, mode)
         else:
-	    self.memory[addr] = 0
+	    self.write(3, 0, mode)
 	self.pc += 4
+
+    # op 9
+    def relative_base(self, mode):
+        val = self.read(1, mode)
+        self.rb += val
+        self.pc += 2
 
     # op 3
     def input(self, mode):
 	val = int(self.stdin.readline())
-        addr = self.read(1)
-        self.memory[addr] = val
+        self.write(1, val, mode)
         self.pc += 2
 
     # op 4
@@ -111,6 +124,8 @@ class Computer:
 		self.less_than(mode)
 	    elif op == 8:
 		self.equals(mode)
+            elif op == 9:
+                self.relative_base(mode)
 
 
     def run(self):

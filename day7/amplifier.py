@@ -7,6 +7,7 @@ class Amplifier:
         self.phase = phase
         self.program = program
         self.amplifier = amplifier
+        
 
     def amplify(self, signal):
         stdin = StringIO("{}\n{}\n".format(self.phase, signal))
