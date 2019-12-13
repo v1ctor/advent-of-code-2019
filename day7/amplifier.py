@@ -3,12 +3,13 @@ from computer import Computer
 
 class Amplifier:
     
-    def __init__(self, program, phase):
+    def __init__(self, name, program, phase):
+        self.name = name
         self.computer = Computer(program)
         self.computer.readbuf.append(phase)
 
     def terminated(self):
-        return not self.computer.interrupted()
+        return self.computer.terminated()
 
     def amplify(self, signal):
         self.computer.readbuf.append(signal)
@@ -16,7 +17,7 @@ class Amplifier:
         signal = None
         if len(self.computer.writebuf) > 0:
             signal = self.computer.writebuf[0]
-            self.computer.output = self.computer.writebuf[1:]
+            self.computer.writebuf = self.computer.writebuf[1:]
 
         return signal
 

@@ -16,17 +16,25 @@ def main():
     maxSignal = 0
     result = None
     signal = 0
-    for perm in itertools.permutations(range(5), 5):
+    permutations = None
+    if not feedback:
+        permutations = itertools.permutations(range(5), 5)
+    else:
+        permutations = itertools.permutations(range(5, 10), 5)
+
+    for perm in permutations:
         signal = 0
         amplifiers = []
-        for phase in perm:
-            amplifiers.append(Amplifier(memory, phase))
+        for i in range(len(perm)):
+            amplifiers.append(Amplifier("{}".format(i), memory, perm[i]))
         
         running = True
         while running:
             terminated = True
             for a in amplifiers:
-                signal = a.amplify(signal)
+                out = a.amplify(signal)
+                if out != None:
+                    signal = out
                 terminated &= a.terminated()
             running = not terminated
 

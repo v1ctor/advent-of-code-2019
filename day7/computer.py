@@ -114,6 +114,14 @@ class Computer:
     def interrupted(self):
         return self.icr == 1
 
+    def terminated(self):
+        if self.pc >= len(self.memory):
+            return True
+        opcode = self.memory[self.pc]
+        op = opcode % 100
+        return op == 99
+
+
     def execute(self, op, mode): 
             if op == 1:
 		self.add(mode)
@@ -137,13 +145,13 @@ class Computer:
 
     def run(self):
         size = len(self.memory)
-        self.icr == 0
+        self.icr = 0
 
         while self.pc < size:
             opcode = self.memory[self.pc]
             op = opcode % 100
             mode = opcode / 100
-	    # print("op: {}".format(opcode))
+            # print("op: {}".format(op))
             if op == 99:
 		break
             self.execute(op, mode)
