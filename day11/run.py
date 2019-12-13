@@ -1,5 +1,6 @@
 import sys
 from computer import Computer
+from robot import Robot
 
 def main():
     filename = "input.txt"
@@ -10,8 +11,9 @@ def main():
     s = f.readline()
     memory = list(map(int, s.split(",")))
 
-    c = Computer(memory)
-    c.run()
+    robot = Robot(memory)
+    print(robot.run())
+
 
 if __name__== "__main__":
     main()
