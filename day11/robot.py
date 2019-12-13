@@ -59,13 +59,9 @@ class Robot:
                 color = self.computer.writebuf[0]
                 turn = self.computer.writebuf[1]
                 self.computer.writebuf = self.computer.writebuf[2:]
-               
 
                 # color  
-                if coords not in result:
-                    result[coords] = 1
-                else:
-                    result[coords] += 1
+                result[coords] = color
 
                 # move
                 if turn == 0:
@@ -73,9 +69,16 @@ class Robot:
                 else:
                     self.direction = Direction.turn_right(self.direction)
                 diff = Direction.diff(self.direction)
+        #        print("coords {}, diff {}, color {}, turn {}".format(coords, diff, color, turn))
+                
                 coords = (coords[0] + diff[0], coords[1] + diff[1])
 
-                self.computer.readbuf.append(color)
+                instruction = 0
+                if coords in result:
+                    instruction = result[coords]
+
+                self.computer.readbuf.append(instruction)
+
 
         return len(result)
 
