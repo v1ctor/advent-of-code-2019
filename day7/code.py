@@ -18,9 +18,18 @@ def main():
     signal = 0
     for perm in itertools.permutations(range(5), 5):
         signal = 0
+        amplifiers = []
         for phase in perm:
-            a = Amplifier(memory, phase)
-            signal = a.amplify(signal)
+            amplifiers.append(Amplifier(memory, phase))
+        
+        running = True
+        while running:
+            terminated = True
+            for a in amplifiers:
+                signal = a.amplify(signal)
+                terminated &= a.terminated()
+            running = not terminated
+
 
         if maxSignal < signal:
             maxSignal = signal

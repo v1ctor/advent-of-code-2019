@@ -111,7 +111,7 @@ class Computer:
         self.writebuf.append(val)
         self.pc += 2
 
-    def interrupted():
+    def interrupted(self):
         return self.icr == 1
 
     def execute(self, op, mode): 

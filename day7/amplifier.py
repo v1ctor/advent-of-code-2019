@@ -7,7 +7,7 @@ class Amplifier:
         self.computer = Computer(program)
         self.computer.readbuf.append(phase)
 
-    def terminated():
+    def terminated(self):
         return not self.computer.interrupted()
 
     def amplify(self, signal):
