@@ -3,12 +3,13 @@ import sys
 
 class Computer:
 
-    def __init__(self, memory, stdin = sys.stdin, stdout = sys.stdout):
+    def __init__(self, memory):
         self.memory = list(memory) + [0] * 10000 
         self.pc = 0
         self.rb = 0
-        self.stdin = stdin
-        self.stdout = stdout
+        self.icr = 0
+        self.readbuf = []
+        self.writebuf = []
 
     def mode(self, mode, pos):
 	for i in range(1, pos):
@@ -96,15 +97,29 @@ class Computer:
 
     # op 3
     def input(self, mode):
-	val = int(self.stdin.readline())
-        self.write(1, val, mode)
-        self.pc += 2
+        if len(self.readbuf) == 0:
+            self.icr = 1
+        else:
+	    val = self.readbuf[0]
+            self.readbuf = self.readbuf[1:]
+            self.write(1, val, mode)
+            self.pc += 2
 
     # op 4
     def output(self, mode):
         val = self.read(1, mode)
-	self.stdout.write(str(val) + "\n")
+        self.writebuf.append(val)
         self.pc += 2
+
+    def interrupted(self):
+        return self.icr == 1
+
+    def terminated(self):
+        if self.pc >= len(self.memory):
+            return True
+        opcode = self.memory[self.pc]
+        op = opcode % 100
+        return op == 99
 
 
     def execute(self, op, mode): 
@@ -130,13 +145,16 @@ class Computer:
 
     def run(self):
         size = len(self.memory)
+        self.icr = 0
 
         while self.pc < size:
             opcode = self.memory[self.pc]
             op = opcode % 100
             mode = opcode / 100
-	    # print("op: {}".format(opcode))
+            # print("op: {}".format(op))
             if op == 99:
 		break
             self.execute(op, mode)
+            if self.icr == 1:
+                break
 
