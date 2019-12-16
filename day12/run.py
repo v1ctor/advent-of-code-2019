@@ -20,8 +20,11 @@ def gravity(x, y):
 
 def compute_energy(moons, itter):
     energy = 0
-    for k in range(itter):
+    velocity = 0
+    k = 0
+    while k < itter:
         energy = 0
+        velocity = 0
         for i in range(len(moons)):
             m1 = moons[i]
             for j in range(i + 1, len(moons)):
@@ -36,7 +39,12 @@ def compute_energy(moons, itter):
             m1.x += m1.vX
             m1.y += m1.vY
             m1.z += m1.vZ
+            velocity += (abs(m1.vX) + abs(m1.vY) + abs(m1.vZ))
             energy += (abs(m1.x) + abs(m1.y) + abs(m1.z)) * (abs(m1.vX) + abs(m1.vY) + abs(m1.vZ))
+        if velocity == 0:
+            print("itterations to the end of the universe: {}".format(k + 1))
+            return
+        k += 1
 
     return energy
 
@@ -62,7 +70,7 @@ def main():
     moons = parse(lines)
 
 
-    itter = int(input("enter num,ber of itterations: "))
+    itter = int(input("enter number of itterations: "))
     print(compute_energy(moons, itter))
 
 
