@@ -22,22 +22,21 @@ def compute_energy(moons, itter):
     energy = 0
     for k in range(itter):
         energy = 0
-        for m in moons:
-            print("pos=<x={}, y={}, z={}>, vel=<x={}, y={}, z={}>".format(m.x, m.y, m.z, m.vX, m.vY, m.vZ))
         for i in range(len(moons)):
             m1 = moons[i]
-            for j in range(len(moons)):
-                if i != j:
-                    m2 = moons[j]
-                    m1.vX += gravity(m1.x, m2.x)
-                    m1.vY += gravity(m1.y, m2.y)
-                    m1.vZ += gravity(m1.z, m2.z)
+            for j in range(i + 1, len(moons)):
+                m2 = moons[j]
+                m1.vX += gravity(m1.x, m2.x)
+                m1.vY += gravity(m1.y, m2.y)
+                m1.vZ += gravity(m1.z, m2.z)
+                m2.vX += gravity(m2.x, m1.x)
+                m2.vY += gravity(m2.y, m1.y)
+                m2.vZ += gravity(m2.z, m1.z)
 
             m1.x += m1.vX
             m1.y += m1.vY
             m1.z += m1.vZ
-            energy += (m1.x + m1.y + m1.z) * (m1.vX + m1.vY + m1.vZ)
-        print("")
+            energy += (abs(m1.x) + abs(m1.y) + abs(m1.z)) * (abs(m1.vX) + abs(m1.vY) + abs(m1.vZ))
 
     return energy
 
@@ -62,7 +61,9 @@ def main():
     lines = f.readlines()
     moons = parse(lines)
 
-    print(compute_energy(moons, 100))
+
+    itter = int(input("enter num,ber of itterations: "))
+    print(compute_energy(moons, itter))
 
 
 if __name__== "__main__":
