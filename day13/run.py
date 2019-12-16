@@ -33,6 +33,8 @@ def draw_game(display):
 
     for j in range(sizeY + 1):
         print(''.join(buf[j]))
+
+    print(score)
             
 
 def main():
@@ -55,7 +57,8 @@ def main():
             if len(c.writebuf) == 0:
                 break
             draw_game(c.writebuf)
-            c.writebuf = [] 
+            c.writebuf = []
+            c.readbuf.append(0)
     else:
         c = Computer(memory)
         c.run()
