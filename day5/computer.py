@@ -7,12 +7,13 @@ class Computer:
 
     def mode(self, mode, pos):
         for i in range(1, pos):
-            mode = mode / 10
+            mode = mode // 10
         return mode % 10
 
 
     def read(self, pos, mode = -1):
         value = self.memory[self.pc + pos]
+        print("read: {} mode: {} pos: {}".format(value, mode, pos))
         if mode == -1:
             return value
         if self.mode(mode, pos) == 0:
@@ -80,7 +81,7 @@ class Computer:
     def input(self, mode):
         val = input()
         addr = self.read(1)
-        self.memory[addr] = val
+        self.memory[addr] = int(val)
         self.pc += 2
 
     # op 4
@@ -115,8 +116,8 @@ class Computer:
         while self.pc < size:
             opcode = self.memory[self.pc]
             op = opcode % 100
-            mode = opcode / 100
-            # print("op: {}".format(opcode))
+            mode = opcode // 100
+            print("op: {}".format(opcode))
             if op == 99:
                 break
             self.execute(op, mode)
