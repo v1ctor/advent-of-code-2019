@@ -1,40 +1,51 @@
 import sys
 from computer import Computer
 
-def draw_game(display):
-    sizeX = 0
+class Game:
+    sizeX = 0 
     sizeY = 0
     score = 0
-    for i in range(0, len(display), 3):
-        op = display[i:i + 3]
-        if op[0] == -1:
-            score = op[2]
-        else:
-            if sizeX < op[0]:
-                sizeX = op[0]
-            if sizeY < op[1]:
-                sizeY = op[1]
-    buf = [[]] * (sizeY + 1)
-    for i in range(sizeY + 1):
-        buf[i] = ["."] * (sizeX + 1)
+    buf = None
+    ball = None
+
+    def init(self, display):
+        for i in range(0, len(display), 3):
+            op = display[i:i + 3]
+            if op[0] == -1:
+                continue
+            else:
+                if self.sizeX < op[0]:
+                    self.sizeX = op[0]
+                if self.sizeY < op[1]:
+                    self.sizeY = op[1]
+        self.buf = [[]] * (self.sizeY + 1)
+        for i in range(self.sizeY + 1):
+            self.buf[i] = ["."] * (self.sizeX + 1)
+
+    def draw_game(self, display):
+        if self.buf == None:
+            self.init(display)
         
-    for i in range(0, len(display), 3):        
-        op = display[i:i + 3]         
-        if op[0] == -1:
-            continue
-        if op[2] == 1: 
-            buf[op[1]][op[0]] = "#"
-        if op[2] == 2:
-            buf[op[1]][op[0]] = "x"
-        if op[2] == 3:
-            buf[op[1]][op[0]] = "="
-        if op[2] == 4:
-            buf[op[1]][op[0]] = "o"
+        for i in range(0, len(display), 3):        
+            op = display[i:i + 3]         
+            if op[0] == -1:
+                self.score = op[2]
+            if op[2] == 1: 
+                self.buf[op[1]][op[0]] = "#"
+            if op[2] == 2:
+                self.buf[op[1]][op[0]] = "x"
+            if op[2] == 3:
+                self.buf[op[1]][op[0]] = "="
+            if op[2] == 4:
+                if self.ball != None:
+                    self.buf[self.ball[1]][self.ball[0]] = '.'
+                self.ball = op[:2]
+                self.buf[op[1]][op[0]] = "o"
 
-    for j in range(sizeY + 1):
-        print(''.join(buf[j]))
+        for j in range(self.sizeY + 1):
+            print(''.join(self.buf[j]))
 
-    print(score)
+        print(self.score)
             
 
 def main():
@@ -48,7 +59,8 @@ def main():
     s = f.readline()
     memory = list(map(int, s.split(",")))
 
-    
+   
+    game = Game()
     if play:
         memory[0] = 2
         c = Computer(memory)
@@ -56,7 +68,7 @@ def main():
             c.run()
             if len(c.writebuf) == 0:
                 break
-            draw_game(c.writebuf)
+            game.draw_game(c.writebuf)
             c.writebuf = []
             c.readbuf.append(0)
     else:
