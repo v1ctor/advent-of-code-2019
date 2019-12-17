@@ -1,5 +1,5 @@
-from StringIO import StringIO
 from computer import Computer
+from io import StringIO
 
 class Amplifier:
     
