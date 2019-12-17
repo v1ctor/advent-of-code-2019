@@ -7,6 +7,8 @@ class Game:
     score = 0
     buf = None
     ball = None
+    platform = None
+    command = 0
 
     def init(self, display):
         for i in range(0, len(display), 3):
@@ -35,11 +37,21 @@ class Game:
             if op[2] == 2:
                 self.buf[op[1]][op[0]] = "x"
             if op[2] == 3:
+                if self.platform != None:
+                    self.buf[self.platform[1]][self.platform[0]] = '.'
                 self.buf[op[1]][op[0]] = "="
+                self.platform = op[:2]
             if op[2] == 4:
                 if self.ball != None:
                     self.buf[self.ball[1]][self.ball[0]] = '.'
                 self.ball = op[:2]
+                if self.platform != None:
+                    if self.platform[0] > self.ball[0]:
+                        self.command = -1
+                    elif self.platform[0] < self.ball[0]:
+                        self.command = 1
+                    else:
+                        self.command = 0 
                 self.buf[op[1]][op[0]] = "o"
 
         for j in range(self.sizeY + 1):
@@ -70,7 +82,7 @@ def main():
                 break
             game.draw_game(c.writebuf)
             c.writebuf = []
-            c.readbuf.append(0)
+            c.readbuf.append(game.command)
     else:
         c = Computer(memory)
         c.run()

@@ -151,7 +151,7 @@ class Computer:
             opcode = self.memory[self.pc]
             op = opcode % 100
             mode = opcode // 100
-            print("op: {}".format(op))
+            #print("op: {}".format(op))
             if op == 99:
                 break
             self.execute(op, mode)
