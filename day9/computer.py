@@ -12,7 +12,7 @@ class Computer:
 
     def mode(self, mode, pos):
         for i in range(1, pos):
-            mode = mode / 10
+            mode = mode // 10
         return mode % 10
 
 
@@ -134,7 +134,7 @@ class Computer:
         while self.pc < size:
             opcode = self.memory[self.pc]
             op = opcode % 100
-            mode = opcode / 100
+            mode = opcode // 100
             # print("op: {}".format(opcode))
             if op == 99:
                 break
