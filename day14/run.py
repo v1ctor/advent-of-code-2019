@@ -46,16 +46,30 @@ def compute_resources(reactions, leftovers, target, amount, base):
     result = 0
     count = math.ceil(amount / reaction.amount)
 
-    print("target {} amount {} reactions {}".format(target, amount, count))
+#    print("target {} amount {} reactions {}".format(target, amount, count))
     
     if target not in leftovers:
         leftovers[target] = 0 
     leftovers[target] += (reaction.amount * count - amount) 
     for ingredient in reaction.ingredients:
         base_ingredient = compute_resources(reactions, leftovers, ingredient.name, count * ingredient.amount, base)
-        print("root: {} name: {} base: {}".format(target, ingredient.name, base_ingredient))
+#       print("root: {} name: {} base: {}".format(target, ingredient.name, base_ingredient))
         result += base_ingredient
     return result
+
+
+def binary_search(start, end, target, reactions):
+    if start == end:
+        return start
+    mid = (start + end) // 2
+    resources = compute_resources(reactions, {}, "FUEL", mid, "ORE")
+    if resources < target:
+        return binary_search(mid + 1, end, target, reactions)
+    elif resources > target:
+        return binary_search(start, mid - 1, target, reactions)
+    else:
+        return mid
+
 
 
 def main():
@@ -70,13 +84,18 @@ def main():
     print(reactions)
 
 
-    leftovers = {}
     reactions_map = {}
     for reaction in reactions:
         reactions_map[reaction.result.name] = reaction
 
 
-    print(compute_resources(reactions_map, leftovers, "FUEL", 1, "ORE"))
+
+    print(compute_resources(reactions_map, {}, "FUEL", 1, "ORE")) 
+    print(compute_resources(reactions_map, {}, "FUEL", 5000000, "ORE"))
+    print(compute_resources(reactions_map, {}, "FUEL", 2595245, "ORE"))
+   
+    print(binary_search(1, 5000000, 1000000000000, reactions_map))
+
 
 if __name__== "__main__":
     main()
