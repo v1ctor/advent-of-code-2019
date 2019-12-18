@@ -1,6 +1,11 @@
 import sys
 
 
+entrance = "@"
+wall = "#"
+empty = "."
+
+
 def main():
     filename = "input.txt"
     if len(sys.argv) > 1:
