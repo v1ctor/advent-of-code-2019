@@ -42,9 +42,11 @@ def main():
 
 
     commands = list(map(int, list(line)))
+    offset = int(''.join(str(x) for x in commands[:7]))
+    print("offset {}".format(offset))
 
-    result = ftt(commands, 100)
-    print(''.join(str(x) for x in result[:8]))
+    result = ftt(commands * 10000, 100)
+    print(''.join(str(x) for x in result[offset:8]))
 
 
 if __name__== "__main__":
