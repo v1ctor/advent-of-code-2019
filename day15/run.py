@@ -97,6 +97,36 @@ class Droid:
         return self.__dfs()
 
 
+    def draw_map(self):
+        maxX = 0
+        minX = 0
+        maxY = 0
+        minY = 0
+        for key in self.visited.keys():
+            if key[0] < minX:
+                minX = key[0]
+            if key[0] > maxX:
+                maxX = key[0]
+            if key[1] < minY:
+                minY = key[1]
+            if key[1] > maxY:
+                maxY = key[1]
+        sizeX = abs(minX) + maxX + 1
+        sizeY = abs(minY) + maxY + 1
+
+        result = [[]] * sizeY
+        for y in range(sizeY):
+            result[y] = ["."] * sizeX
+            for x in range(sizeX):
+                pos = (x - abs(minX), y - abs(minY))
+                if pos in self.visited:
+                    status = self.visited[pos]
+                    if status == 0:
+                        result[y][x] = "#"
+                    if status == 2:
+                        result[y][x] = "o"
+            print(''.join(result[y]))
+
 def main():
     filename = "input.txt"
     play = False
@@ -112,6 +142,8 @@ def main():
 
     droid = Droid(memory)
     print(droid.search_oxygen())
+
+    droid.draw_map()
 
 if __name__== "__main__":
     main()
