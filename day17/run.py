@@ -1,6 +1,22 @@
 import sys
 from computer import Computer            
 
+def calculate_alignment(display):
+    display = display.strip()
+    rows = display.split("\n")
+
+    alignment = 0
+
+    y = len(rows)
+    for j in range(y):
+        x = len(rows[j])
+        for i in range(x):
+            if rows[j][i] == '#' and i > 0 and i < x - 1 and j > 0 and j < y - 1 and rows[j][i - 1] == '#' and rows[j][i + 1] == '#' and rows[j - 1][i] == '#' and rows[j + 1][i] == '#':
+                alignment += j * i
+
+    return alignment
+
+
 def main():
     filename = "input.txt"
     if len(sys.argv) > 1:
@@ -18,7 +34,7 @@ def main():
 
     print(display)
 
-        
+    print(calculate_alignment(display))        
 
 
 if __name__== "__main__":
