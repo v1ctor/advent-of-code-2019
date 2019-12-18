@@ -7,6 +7,7 @@ class Droid:
         self.y = 0
         self.path = []
         self.visited = {}
+        self.oxygen = None
         self.computer = Computer(memory)
 
     def move(self, direction):
@@ -20,17 +21,20 @@ class Droid:
         else:
             self.x += 1
 
+    def direction(self, source, direction):
+        if direction == 1:
+            return (source[0], source[1] - 1)
+        elif direction == 2:
+            return (source[0], source[1] + 1)
+        elif direction == 3:
+            return (source[0] - 1, source[1])
+        else:
+            return (source[0] + 1, source[1])
+
 
     def target(self, direction):
-        if direction == 1:
-            return (self.x, self.y - 1)
-        elif direction == 2:
-            return (self.x, self.y + 1)
-        elif direction == 3:
-            return (self.x - 1, self.y)
-        else:
-            return (self.x + 1, self.y)
-        
+       return self.direction((self.x, self.y), direction)
+
 
     def backtrack(self):
         direction = self.path[-1]
@@ -72,6 +76,7 @@ class Droid:
             # oxygen
             if status == 2:
                 # if we found oxygen it means tha none of the neighbours of this node can have a shorter path
+                self.oxygen = target
                 min_path = len(self.path)
                 break
 
@@ -127,6 +132,29 @@ class Droid:
                         result[y][x] = "o"
             print(''.join(result[y]))
 
+
+    def fill_oxygen(self):
+        if self.oxygen is None or self.oxygen not in self.visited or self.visited[self.oxygen] != 2:
+            return None
+        visited = {}
+        queue = []
+        time = 0
+        queue.append((self.oxygen, 0))
+        while len(queue) > 0:
+            current = queue[0][0]
+            time = queue[0][1]
+            queue = queue[1:]
+            for i in range(1, 5):
+                direction = self.direction(current, i)
+                if direction not in visited and direction in self.visited and self.visited[direction] == 1:
+                    visited[direction] = True
+                    queue.append((direction, time + 1))
+
+        return time
+
+
+
+
 def main():
     filename = "input.txt"
     play = False
@@ -137,13 +165,15 @@ def main():
     f = open(filename)
     s = f.readline()
     memory = list(map(int, s.split(",")))
- 
-
 
     droid = Droid(memory)
-    print(droid.search_oxygen())
+    source = droid.search_oxygen()
+    print(source)
 
     droid.draw_map()
+
+    time = droid.fill_oxygen()
+    print(time)
 
 if __name__== "__main__":
     main()
