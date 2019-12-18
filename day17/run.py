@@ -19,22 +19,39 @@ def calculate_alignment(display):
 
 def main():
     filename = "input.txt"
+    run = False
     if len(sys.argv) > 1:
         filename = sys.argv[1]
+    if len(sys.argv) > 2 and sys.argv[2] == "--run":
+        run = True
     f = open(filename)
     s = f.readline()
     memory = list(map(int, s.split(",")))
 
-    computer = Computer(memory)
-    display = ""
-    while not computer.terminated():
-        computer.run()
+    if not run:
+        computer = Computer(memory)
+        display = ""
+        while not computer.terminated():
+            computer.run()
+            while len(computer.writebuf) > 0:
+                display += chr(computer.receive())
+
+        print(display)
+
+        print(calculate_alignment(display))
+    else:
+        memory[0] = 2
+        computer = Computer(memory)
+        display = "" 
+        program = "A,C,A,C,B,B,C,A,C,B\nL,10,R,10,L,10,L,10\nR,12,L,12,R,6\nR,10,R,12,L,12\nn\n"
+        for c in program:
+            computer.send(ord(c))
+
+        while not computer.terminated():      
+            computer.run()
+        
         while len(computer.writebuf) > 0:
-            display += chr(computer.receive())
-
-    print(display)
-
-    print(calculate_alignment(display))        
+            print(computer.receive())
 
 
 if __name__== "__main__":
