@@ -40,8 +40,8 @@ def find_period(positions, velocities, dimension):
     v = velocities[dimension::3]
     while initial_positions != p or any(x != 0 for x in v):
         run_simulation_iteration(positions, velocities, dimension)
-        positions = positions[dimension::3]
-        velocities = velocities[dimension::3]
+        p = positions[dimension::3]
+        v = velocities[dimension::3]
         period += 1
     return period
 
@@ -49,7 +49,6 @@ def find_universe_period(positions, velocities):
     periods = []
     for i in range(3):
         periods.append(find_period(positions, velocities, i))
-        print(periods)
 
     return lcmm(periods)
 
