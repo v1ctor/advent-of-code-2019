@@ -2,12 +2,8 @@ import sys
 import re
 class Moon:
     def __init__(self, x, y, z):
-        self.x = x
-        self.y = y
-        self.z = z
-        self.vX = 0
-        self.vY = 0
-        self.vZ = 0
+        self.pos = [x, y, z]
+        self.vel = [0, 0, 0]
         self.energy = 0
 
 def gravity(x, y):
@@ -24,26 +20,21 @@ def compute_energy(moons, itter):
     k = 0
     while k < itter:
         energy = 0
-        velocity = 0
         for i in range(len(moons)):
             m1 = moons[i]
             for j in range(i + 1, len(moons)):
                 m2 = moons[j]
-                m1.vX += gravity(m1.x, m2.x)
-                m1.vY += gravity(m1.y, m2.y)
-                m1.vZ += gravity(m1.z, m2.z)
-                m2.vX += gravity(m2.x, m1.x)
-                m2.vY += gravity(m2.y, m1.y)
-                m2.vZ += gravity(m2.z, m1.z)
+                for p in range(3):
+                    m1.vel[p] += gravity(m1.pos[p], m2.pos[p])
+                    m2.vel[p] += gravity(m2.pos[p], m1.pos[p])
 
-            m1.x += m1.vX
-            m1.y += m1.vY
-            m1.z += m1.vZ
-            velocity += (abs(m1.vX) + abs(m1.vY) + abs(m1.vZ))
-            energy += (abs(m1.x) + abs(m1.y) + abs(m1.z)) * (abs(m1.vX) + abs(m1.vY) + abs(m1.vZ))
-        if velocity == 0:
-            print("itterations to the end of the universe: {}".format(k + 1))
-            return
+            m1.pos = [sum(n) for n in zip(*[m1.pos, m1.vel])]
+            kinetic = 0
+            potential = 0
+            for p in range(3):
+                kinetic += abs(m1.pos[p])
+                potential += abs(m1.vel[p])
+            energy += kinetic * potential
         k += 1
 
     return energy
