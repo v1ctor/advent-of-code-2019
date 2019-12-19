@@ -14,12 +14,10 @@ def gravity(x, y):
     if x < y:
         return 1
 
+
 def compute_energy(moons, itter):
-    energy = 0
-    velocity = 0
     k = 0
     while k < itter:
-        energy = 0
         for i in range(len(moons)):
             m1 = moons[i]
             for j in range(i + 1, len(moons)):
@@ -29,13 +27,16 @@ def compute_energy(moons, itter):
                     m2.vel[p] += gravity(m2.pos[p], m1.pos[p])
 
             m1.pos = [sum(n) for n in zip(*[m1.pos, m1.vel])]
-            kinetic = 0
-            potential = 0
-            for p in range(3):
-                kinetic += abs(m1.pos[p])
-                potential += abs(m1.vel[p])
-            energy += kinetic * potential
         k += 1
+
+    energy = 0
+    for m in moons:
+        kinetic = 0
+        potential = 0
+        for p in range(3):
+            kinetic += abs(m.pos[p])
+            potential += abs(m.vel[p])
+        energy += kinetic * potential 
 
     return energy
 
