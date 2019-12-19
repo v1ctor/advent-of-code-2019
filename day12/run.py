@@ -14,20 +14,24 @@ def gravity(x, y):
     if x < y:
         return 1
 
-
-def simulate(moons, itter):
+def simulate_dimension(moons, dimension, itter):
     k = 0
     while k < itter:
         for i in range(len(moons)):
             m1 = moons[i]
             for j in range(i + 1, len(moons)):
                 m2 = moons[j]
-                for p in range(3):
-                    m1.vel[p] += gravity(m1.pos[p], m2.pos[p])
-                    m2.vel[p] += gravity(m2.pos[p], m1.pos[p])
+                m1.vel[dimension] += gravity(m1.pos[dimension], m2.pos[dimension])
+                m2.vel[dimension] += gravity(m2.pos[dimension], m1.pos[dimension])
 
-            m1.pos = [sum(n) for n in zip(*[m1.pos, m1.vel])]
+            m1.pos[dimension] += m1.vel[dimension]
         k += 1
+        
+
+
+def simulate(moons, itter):
+    for i in range(3):
+        simulate_dimension(moons, i, itter)
 
 def compute_energy(moons):
     energy = 0
