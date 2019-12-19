@@ -15,7 +15,7 @@ def gravity(x, y):
         return 1
 
 
-def compute_energy(moons, itter):
+def simulate(moons, itter):
     k = 0
     while k < itter:
         for i in range(len(moons)):
@@ -29,6 +29,7 @@ def compute_energy(moons, itter):
             m1.pos = [sum(n) for n in zip(*[m1.pos, m1.vel])]
         k += 1
 
+def compute_energy(moons):
     energy = 0
     for m in moons:
         kinetic = 0
@@ -63,7 +64,8 @@ def main():
 
 
     itter = int(input("enter number of itterations: "))
-    print(compute_energy(moons, itter))
+    simulate(moons, itter)
+    print(compute_energy(moons))
 
 
 if __name__== "__main__":
