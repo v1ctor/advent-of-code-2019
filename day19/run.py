@@ -14,10 +14,7 @@ def divider():
         if 10000 % i == 0:
             yield i
 
-def find_place(program, is_row, index, start, end):
-
-
-    # 
+def find_place(program, is_row, index, start, end): 
 
     return [7267, 9074]
     i = start 
@@ -66,6 +63,13 @@ def main():
                     beam += 1
         print(beam)
     else:
+        for i in range(948, 1048):
+            result = ""
+            for j in range(761, 861):
+                result += str(get_result(memory, True, i, j))
+            print(result)
+
+            
         binary_search(memory, 10000) 
 
 
