@@ -16,7 +16,8 @@ def main():
     if not run:
         computer = Computer(memory)
         display = ""
-        program = "NOT D T\nNOT T J\nWALK\n"
+        #program = """NOT A J\nNOT B T\nAND T J\nNOT C T\nAND T J\nAND D J\nWALK\n"""
+        program = "NOT A T\nAND D T\nNOT B J\nAND C J\nOR T J\nWALK\n"
         for c in program:
             computer.send(ord(c))
 
